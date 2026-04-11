@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Raw bulk data (too large for git)
+bulk-data/
+data/dailymed_bulk_raw.csv
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
