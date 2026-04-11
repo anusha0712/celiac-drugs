@@ -12,6 +12,9 @@ venv/
 bulk-data/
 data/dailymed_bulk_raw.csv
 
+# Analysis drafts
+analysis/bulk_findings.md
+
 # Editor / IDE
 .vscode/
 .idea/

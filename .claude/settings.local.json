@@ -32,7 +32,8 @@
       "Bash(ls:*)",
       "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36\" \"https://nationalceliac.org/ingredients-people-question/\")",
       "WebFetch(domain:www.google.com)",
-      "Bash(grep -n \"^]$\" scripts/build_validation_table.py)"
+      "Bash(grep -n \"^]$\" scripts/build_validation_table.py)",
+      "Bash(git rm:*)"
     ]
   }
 }
