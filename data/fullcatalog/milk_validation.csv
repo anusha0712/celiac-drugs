@@ -1,0 +1,28 @@
+fda_term,match_type,flag_decision,source_url,iid_status,iid_unii,rationale
+CASEIN,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Casein'.
+SODIUM CASEINATE,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Caseinates (all forms)'.
+CALCIUM CASEINATE,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Caseinates (all forms)'.
+POTASSIUM CASEINATE,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Caseinates (all forms)'.
+HYDROLYZED CASEIN,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Casein hydrolysate'.
+HYDROLYZED CASEIN (ENZYMATIC,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Raw-string casein-hydrolysate variant. FARE milk list.
+WHEY,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Whey (in all forms)'.
+WHEY PROTEIN HYDROLYSATE,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Whey protein hydrolysate'.
+ALPHA-LACTALBUMIN,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Lactalbumin'.
+.ALPHA.-LACTALBUMIN,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Raw-string lactalbumin variant. FARE milk list.
+ALPHA-LACTALBUMIN (BOVINE),exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Raw-string bovine-lactalbumin variant. FARE milk list.
+BETA-LACTOGLOBULIN,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Lactoglobulin'.
+LACTOFERRIN,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Lactoferrin'.
+"LACTOFERRIN, BOVINE",exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Raw-string bovine-lactoferrin variant. FARE milk list.
+LACTOPEROXIDASE,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Related milk-protein enzyme; FARE classifies as milk-derived under protein fraction.
+LACTOPEROXIDASE BOVINE,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Raw-string bovine-lactoperoxidase variant.
+MILK,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Milk (in all forms...)'.
+SKIM MILK,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,"FARE names 'Milk ... skimmed, nonfat'."
+COW MILK,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Milk (in all forms)'.
+COW MILK FAT,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Milkfat'.
+GOAT MILK,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'milk from other animals' including goat.
+BOS TAURUS COLOSTRUM,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Bovine colostrum is a milk derivative. FARE milk list.
+MILK PROTEIN,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Milk protein'.
+MILK PROTEIN CONCENTRATE,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,in_iid,871QYF3I7B,FARE names 'Milk protein' fraction.
+"AMINO ACIDS, MILK",exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,Amino acids sourced from milk. FARE milk list.
+NONFAT DRY MILK,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,"FARE names 'Milk ... nonfat, dry'."
+BUTTERMILK,exact,contains_milk,https://www.foodallergy.org/living-food-allergies/food-allergy-essentials/common-allergens/milk,not_in_iid,,FARE names 'Buttermilk'.

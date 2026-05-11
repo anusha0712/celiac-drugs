@@ -1,0 +1,25 @@
+fda_term,match_type,flag_decision,source_url,iid_status,iid_unii,rationale
+CARMINE,exact,contains_carmine,https://www.law.cornell.edu/cfr/text/21/73.100,in_iid,NA,21 CFR 73.100(d)(2) permitted name for cochineal-extract color additive. Greenhawt 2009 anaphylaxis anchor.
+COCHINEAL EXTRACT,exact,contains_carmine,https://www.law.cornell.edu/cfr/text/21/73.100,not_in_iid,,21 CFR 73.100(d)(2) permitted name.
+COCHINEAL,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/TZ8Z31B35M,not_in_iid,,GSRS UNII TZ8Z31B35M preferred name.
+DACTYLOPIUS COCCUS COLORANT,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/TZ8Z31B35M,not_in_iid,,GSRS synonym on COCHINEAL (species-name form).
+DACTYLOPIUS CACTI COLORANT,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/TZ8Z31B35M,not_in_iid,,GSRS synonym on COCHINEAL (species-name form).
+COCCUS CACTI COLORANT,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/TZ8Z31B35M,not_in_iid,,GSRS synonym on COCHINEAL (older genus form).
+CARMINIC ACID,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS UNII CID8Z8N95N preferred name. The anthraquinone component of cochineal/carmine.
+CI 75470,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,Colour Index 75470 = carminic acid (GSRS synonym).
+C.I. 75470,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,Punctuated variant. GSRS synonym.
+NATURAL RED 4,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS synonym on CARMINIC ACID.
+C.I. NATURAL RED 4,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS synonym on CARMINIC ACID.
+NATURAL RED 2180,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS synonym on CARMINIC ACID.
+E 120,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,EU food colorant number. GSRS synonym.
+E-120,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,Hyphenated variant. GSRS synonym.
+E120,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,Unspaced variant of E 120. Defensive.
+INS-120,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,Codex INS code for carmine. GSRS synonym.
+INS 120,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,Spaced variant. Defensive.
+COCHINEAL CARMINE,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS synonym on CARMINIC ACID.
+CARMINE 5297,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS synonym on CARMINIC ACID.
+COCHINEAL RED PWD,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS synonym on CARMINIC ACID.
+SUN RED NO. 1,exact,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,GSRS synonym on CARMINIC ACID.
+\bCARMINE\b,regex,contains_carmine,https://www.law.cornell.edu/cfr/text/21/73.100,in_iid,NA,Word-boundary CARMINE. Avoids CROSCARMELLOSE false-match.
+\bCARMINIC\b,regex,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/CID8Z8N95N,not_in_iid,,Word-boundary CARMINIC (catches CARMINIC ACID and variants).
+\bCOCHINEAL\b,regex,contains_carmine,https://precision.fda.gov/uniisearch/srs/unii/TZ8Z31B35M,not_in_iid,,Word-boundary COCHINEAL.

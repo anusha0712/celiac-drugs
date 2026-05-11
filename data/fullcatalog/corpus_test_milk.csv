@@ -1,0 +1,28 @@
+fda_term,match_type,matched_string,flag_decision,notes
+CASEIN,exact,CASEIN,contains_milk,
+SODIUM CASEINATE,exact,SODIUM CASEINATE,contains_milk,
+CALCIUM CASEINATE,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+POTASSIUM CASEINATE,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+HYDROLYZED CASEIN,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+HYDROLYZED CASEIN (ENZYMATIC,exact,HYDROLYZED CASEIN (ENZYMATIC,contains_milk,
+WHEY,exact,WHEY,contains_milk,
+WHEY PROTEIN HYDROLYSATE,exact,WHEY PROTEIN HYDROLYSATE,contains_milk,
+ALPHA-LACTALBUMIN,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+.ALPHA.-LACTALBUMIN,exact,.ALPHA.-LACTALBUMIN,contains_milk,
+ALPHA-LACTALBUMIN (BOVINE),exact,ALPHA-LACTALBUMIN (BOVINE),contains_milk,
+BETA-LACTOGLOBULIN,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+LACTOFERRIN,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+"LACTOFERRIN, BOVINE",exact,"LACTOFERRIN, BOVINE",contains_milk,
+LACTOPEROXIDASE,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+LACTOPEROXIDASE BOVINE,exact,LACTOPEROXIDASE BOVINE,contains_milk,
+MILK,exact,MILK,contains_milk,
+SKIM MILK,exact,SKIM MILK,contains_milk,
+COW MILK,exact,COW MILK,contains_milk,
+COW MILK FAT,exact,COW MILK FAT,contains_milk,
+GOAT MILK,exact,GOAT MILK,contains_milk,
+BOS TAURUS COLOSTRUM,exact,BOS TAURUS COLOSTRUM,contains_milk,
+MILK PROTEIN,exact,MILK PROTEIN,contains_milk,
+MILK PROTEIN CONCENTRATE,exact,MILK PROTEIN CONCENTRATE,contains_milk,
+"AMINO ACIDS, MILK",exact,"AMINO ACIDS, MILK",contains_milk,
+NONFAT DRY MILK,exact,,contains_milk,NO MATCH in corpus — rule currently inactive
+BUTTERMILK,exact,,contains_milk,NO MATCH in corpus — rule currently inactive

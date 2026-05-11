@@ -1,0 +1,25 @@
+fda_term,match_type,matched_string,flag_decision,notes
+CARMINE,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+COCHINEAL EXTRACT,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+COCHINEAL,exact,COCHINEAL,contains_carmine,
+DACTYLOPIUS COCCUS COLORANT,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+DACTYLOPIUS CACTI COLORANT,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+COCCUS CACTI COLORANT,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+CARMINIC ACID,exact,CARMINIC ACID,contains_carmine,
+CI 75470,exact,CI 75470,contains_carmine,
+C.I. 75470,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+NATURAL RED 4,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+C.I. NATURAL RED 4,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+NATURAL RED 2180,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+E 120,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+E-120,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+E120,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+INS-120,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+INS 120,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+COCHINEAL CARMINE,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+CARMINE 5297,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+COCHINEAL RED PWD,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+SUN RED NO. 1,exact,,contains_carmine,NO MATCH in corpus — rule currently inactive
+\bCARMINE\b,regex,,contains_carmine,NO MATCH in corpus — rule currently inactive
+\bCARMINIC\b,regex,CARMINIC ACID,contains_carmine,
+\bCOCHINEAL\b,regex,COCHINEAL,contains_carmine,

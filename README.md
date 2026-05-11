@@ -1,554 +1,420 @@
-# Gluten Excipients in US Medications: A Labeling Transparency Analysis
+# Hidden Drug Allergens in US Drug Labels
 
-A science journalism project analyzing whether celiac patients can determine
-from US drug labels whether their medications contain gluten-source excipients.
-This replicates and extends the methodology of a
-[Portuguese study (Figueiredo et al. 2025)](https://doi.org/10.1038/s41598-025-95525-6)
-using US data from DailyMed, the FDA's public drug label database.
-
-The central question is not "do these drugs contain gluten?" but rather "can a
-celiac patient tell from the label?" This is a labeling transparency and
-regulatory gap story, not a toxicology story.
+A science-journalism research repository analyzing whether US drug labels give
+patients enough information to identify medications that contain four common
+allergens — **gluten, milk proteins / lactose, polyethylene glycol (PEG), and
+carmine / cochineal extract**. Built around DailyMed (the FDA's public drug
+label database), every classification rule traces to a primary source (FDA
+regulations, peer-reviewed literature, USP-NF compendial monographs, FARE
+ingredient lists, GSRS UNII synonym records). The central question is not
+*"do these drugs contain allergen X?"* but *"can the patient tell from the
+label?"* — a labeling-transparency and regulatory-gap story, not a toxicology
+story.
 
 ---
 
-## Background Context
+## Background context
 
-### Celiac Disease and Excipients
+### Why allergens in drug labels matter
 
-Celiac disease is an autoimmune condition triggered by gluten (proteins in
-wheat, rye, and barley) affecting roughly 2 million Americans (per NIDDK).
-Daily ingestion of as little as 50mg of gluten can cause intestinal damage
-(Catassi et al. 2007, *Alimentary Pharmacology & Therapeutics*). Medications
-use inactive ingredients (excipients) as binders, fillers, and disintegrants
--- some of which are starch-based. If the starch comes from wheat, it contains
-gluten. If it comes from corn or potato, it does not. The problem: drug labels
-do not always say which.
+Medications use **inactive ingredients** (excipients) as binders, fillers,
+disintegrants, and coatings. Some excipients can trigger reactions in
+patients with documented allergies or hypersensitivities. Unlike food labels,
+US drug labels are **not required** to call out allergen-containing
+excipients in plain language. The Food Allergen Labeling and Consumer
+Protection Act (FALCPA, 2004) explicitly excludes drugs (Pub. L. 108-282
+§203(a); 21 U.S.C. 343(w)). The only FDA-mandated allergen warning rules for
+drugs are the sulfite warning (21 CFR 201.22) and the FD&C Yellow No. 5
+warning (21 CFR 201.20). No comparable mandate exists for gluten, milk, PEG,
+or carmine.
 
-### The Regulatory Gap
+### The three-layer regulatory gap
 
-The Food Allergen Labeling and Consumer Protection Act (FALCPA, 2004) requires
-wheat disclosure on food labels. It explicitly excludes drugs
-(Pub. L. 108-282, Section 203(a); 21 U.S.C. 343(w)). There is no equivalent
-federal requirement for drug labels. The FDA issued a draft guidance in 2017
-recommending allergen disclosure in drug labeling, but it was never finalized.
-The ADINA Act (H.R. 3821), which would extend allergen labeling to drugs, was
-reintroduced in Congress in June 2025 but has not passed.
+This repository's findings sit under a single structural gap, the same shape
+for every allergen studied:
 
-### Real Patient Harm
+1. **Class rule.** No FDA rule requires allergen-specific warning text in
+   drug labels. The two exceptions (sulfites, FD&C Yellow No. 5) prove the
+   rule.
+2. **Product inconsistency.** Where voluntary warnings exist (Advair Diskus
+   family for milk; PEG 3350 Rx bowel preps), some equivalent generics carry
+   the warning and others do not. No rule mandates consistency across
+   ANDA-equivalent products.
+3. **Silent listing.** When an allergen-source excipient is listed in the
+   inactive-ingredients block, in most cases no warning text accompanies it.
 
-This is not a theoretical concern. A 2024 case report (PMC10958639) documents
-a celiac patient who experienced clinical harm from wheat starch in a
-prednisone formulation. The patient had no way to identify the risk from the
-drug label.
-
-### What Is DailyMed?
+### What is DailyMed?
 
 [DailyMed](https://dailymed.nlm.nih.gov) is the FDA's official repository of
 drug labeling information. It is the tool the FDA recommends patients and
 healthcare providers use to look up drug labels. Each label is stored as a
 Structured Product Labeling (SPL) XML document following the HL7 standard.
-These XML files contain machine-readable fields for active ingredients,
-inactive ingredients (excipients), dosage form, route, manufacturer, NDC codes,
-and more. DailyMed provides both a public API for searching and XML endpoints
-for retrieving individual labels.
+Every analysis here is built from a single DailyMed bulk-download snapshot
+(April 6, 2026; 199,961 NDC-level rows after extraction).
 
-### The Portuguese Source Study
+### The four allergens
 
-Figueiredo et al. (2025), "Presence of gluten and soy derived excipients in
-medicinal products and their implications on allergen safety and labeling,"
-published in *Scientific Reports* 15, 10976. The study examined 308 drugs
-across three therapeutic categories in Portugal's INFOMED database. Key
-findings for gluten:
+All headline numbers are post-baseline filter (FDA-recognized human
+medications only — homeopathic, unapproved, dietary supplements, and
+non-drug labels removed; 165,757 of the original 199,961 catalog rows
+remain). See `methodology.md` and per-allergen `findings_*.md` for
+slicing detail.
 
-- 44.4% of paracetamol (acetaminophen) products classified "non-gluten-free"
-- 8.2% of ibuprofen products classified "non-gluten-free"
-- 0% of antiasthmatics/bronchodilators
+| Allergen | Primary-source list | Harm anchor (peer-reviewed) | Headline number |
+|---|---|---:|---:|
+| **Gluten** | 21 CFR 101.91 (wheat / rye / barley) + Figueiredo 2025 (Sci Rep 15:10976) excipient list | Catassi 2007: 50 mg/day causes intestinal damage in celiac patients | 94.36% gluten_free / 1.42% unknown / 0.02% contains_gluten. |
+| **Milk proteins** | FARE milk-allergen ingredient list (lactose family + lactulose removed 2026-05-05 per pharmacist review — purified milk sugars are not protein allergens) | Nowak-Wegrzyn 2004 (PMID 15007361): Advair Diskus DPI anaphylaxis in milk-allergic patients | 115 of 165,757 (0.07%). Oral 36 / 75,435 (0.05%). DPI: 0 of 29 strict-DPI NDCs (0%); 18 of 19 set_ids still carry §4 contraindication language. |
+| **PEG (polyethylene glycol)** | USP-NF PEG monograph (tight scope: POLYETHYLENE GLYCOL, POLYETHYLENE OXIDE, MACROGOL, CARBOWAX) | Stone 2019 (PMID 30557713): 2 PEG 3350 anaphylaxis index cases + 53 FAERS reports | 27,956 of 165,757 (16.87%). Oral-solids slice 23,834 / 64,123 (37.17%). 0 of 16,293 parseable label set_ids carry a PEG-allergy warning. |
+| **Carmine / cochineal** | 21 CFR 73.100 permitted names + GSRS UNII synonyms (TZ8Z31B35M, CID8Z8N95N) | Greenhawt 2009 (PMID 19331724): generic azithromycin tablet anaphylaxis in carmine-allergic patient | 161 products (NDC-level) / 141 set_ids (SPL-level). 0 of 138 parseable set_ids carry carmine-allergy language. |
 
-Critically: zero products in the study contained a confirmed gluten grain
-(wheat, rye, barley). Every "non-gluten-free" classification came from starch
-derivatives whose botanical source was unspecified on the label. The 44.4%
-figure represents labeling ambiguity, not confirmed gluten presence.
+The Portuguese source study (Figueiredo et al. 2025, *Scientific Reports* 15:10976,
+[DOI](https://doi.org/10.1038/s41598-025-95525-6)) was the methodology anchor
+for the gluten workflow. Its 308-drug INFOMED dataset reported 44.4% of
+paracetamol products and 8.2% of ibuprofen products as "non-gluten-free" —
+but **zero** contained a confirmed gluten grain. The figure represented
+labeling ambiguity, not confirmed gluten presence. This repository extends
+the same labeling-transparency framing to milk, PEG, and carmine.
 
-NOTE: I did this to make sure the study is scientifically viable for our methodolody and is not just fake, biased, statistically inaccurate, contain bad scientists or something. The skills use Cochrane Risk of Bias, GRADE and scholar evaluation framework grounded in this paper: https://arxiv.org/abs/2510.16234. The skills are MIT liceses and have nearly 17.2k stars and 1.7k forks on the repo. Community acknowledged as robust. 
+### Real patient harm — not theoretical
 
-We are not following the exact methodology - didn't end up happening - but just as a starting point of the story.
-
-Full paper: https://doi.org/10.1038/s41598-025-95525-6
+- **Gluten:** PMC10958639 (2024 case report) — celiac patient experienced
+  clinical harm from wheat starch in a prednisone formulation; no way to
+  identify the risk from the label.
+- **Milk:** Nowak-Wegrzyn 2004 (PMID 15007361), Robles 2014 (PMID 25309152),
+  Bar-On 2022 (PMID 36555964), Hatcher 2025 (PMID 40958177) — DPI lactose
+  carrier anaphylaxis in milk-allergic patients; trace bovine casein detected
+  in IV methylprednisolone vials.
+- **PEG:** Stone 2019 (PMID 30557713), Wolfson 2021 (PMID 34166844),
+  Greenhawt 2023 (PMID 36321821) — PEG 3350 anaphylaxis FAERS cases;
+  post-mRNA-vaccine PEG/polysorbate skin-test cohort.
+- **Carmine:** Greenhawt 2009 (PMID 19331724), Takeo 2018 (PMID 29705083),
+  Sadowska 2022 (PMID 35369613), Khalil 2025 (PMID 41113612) — only US
+  medication-induced carmine anaphylaxis case (generic azithromycin tablet);
+  Japanese case series; Polish urticaria cohort; recurrent anaphylaxis
+  resolved on carmine elimination.
 
 ---
 
-## Repository Structure
+## Repository structure
 
 ```
 celiac-drugs/
-├── README.md                          <- this file
-├── CLAUDE.md                          <- project instructions, methodology
-│                                         decisions, phase tracking, rules
-│                                         for Claude. Governing document.
-├── SESSION_LOG.md                     <- chronological record of every
-│                                         session: what was done, decisions,
-│                                         assumptions flagged, open questions.
+├── README.md                          ← this file
+├── CLAUDE.md                          ← project instructions, methodology decisions, governing
+├── SESSION_LOG.md                     ← chronological per-session record
+├── TASKS.md                           ← cross-session task list
+├── FDA-IID-recent-update.csv          ← FDA Inactive Ingredient Database snapshot (2026-04-22)
 │
-├── scripts/                           <- all data extraction and processing
-│   ├── pull_dailymed.py               <- Pilot extraction (API → CSV,
-│   │                                     acetaminophen + ibuprofen only).
-│   ├── extract_bulk.py                <- Full-catalog extraction
-│   │                                     (bulk ZIPs → CSV).
-│   ├── build_excipient_list.py        <- Keyword search across bulk catalog
-│   │                                     to discover gluten-adjacent terms.
-│   └── build_validation_table.py      <- Assembles complete validation CSV
-│                                         from pilot entries + new entries +
-│                                         bulk-table revision overrides.
+├── scripts/
+│   ├── extract_fullcatalog_raw.py         ← full-catalog extraction (bulk ZIPs → CSV)
+│   ├── build_gluten_excipient_list.py     ← keyword search; builds research worklist
+│   ├── build_gluten_validation.py         ← assembles gluten validation CSV
+│   ├── filter_gluten_fullcatalog.py       ← 6-step filter pipeline (gluten scope)
+│   ├── flag_gluten_fullcatalog.py         ← apply gluten flags to filtered catalog
+│   ├── analyze_gluten_fullcatalog.py      ← gluten prevalence + slices
+│   ├── build_allergens_validation.py      ← assembles milk + PEG + carmine validation tables
+│   ├── flag_allergens_fullcatalog.py      ← apply 3 allergen flags to RAW catalog
+│   ├── analyze_allergens_fullcatalog.py   ← allergen prevalence + slices
+│   ├── analyze_dpi_labels.py              ← DPI milk-warning SPL analysis
+│   ├── analyze_peg_labels.py              ← PEG-warning SPL analysis
+│   ├── analyze_carmine_labels.py          ← carmine-warning SPL analysis
+│   ├── allergen_filters.py                ← shared DPI / oral-solid / oral filter functions
+│   ├── spl_label_parser.py                ← shared SPL XML parser (Rx + OTC sections)
+│   ├── fda_iid_lookup.py                  ← FDA IID local-CSV loader
+│   └── build_corpus_tests.py              ← deterministic corpus-test generator
 │
 ├── data/
-│   ├── dailymed_bulk_raw.csv          <- Full DailyMed catalog. 199,961 rows
-│   │                                     × 43 columns. Extracted from the
-│   │                                     April 2026 bulk download. NEVER
-│   │                                     modified after creation.
-│   ├── bulk/                          <- Full-catalog derived files
-│   │   ├── excipient_validation.csv   <- Complete validation table.
-│   │   │                                 171 entries (48 pilot + 123 new).
-│   │   │                                 Generated by build_validation_table.py.
-│   │   └── excipient_research_worklist.csv  <- Intermediate file: new terms
-│   │                                            from keyword search needing
-│   │                                            classification.
-│   └── eda/                           <- Pilot data (acetaminophen + ibuprofen)
-│       ├── dailymed_raw.csv           <- Pilot raw pull. 6,605 rows × 39 cols.
-│       ├── dailymed_flagged.csv       <- Pilot data + gluten flag columns.
-│       └── excipient_validation.csv   <- Pilot validation table (48 entries).
-│                                         Preserved unchanged as historical
-│                                         snapshot of pilot-era decisions.
+│   └── fullcatalog/                                      ← full-catalog derived files
+│       ├── dailymed_fullcatalog_raw.csv                  ← raw 199,961 rows (gitignored, 173 MB)
+│       ├── gluten_fullcatalog_filtered.csv               ← post-6-step filter (gitignored, 60 MB)
+│       ├── gluten_fullcatalog_flagged.csv                ← + gluten flag (gitignored, 61 MB)
+│       ├── gluten_validation.csv                         ← gluten validation table (171 entries)
+│       ├── gluten_excipient_research_worklist.csv        ← intermediate (new terms researched)
+│       ├── milk_validation.csv                           ← milk validation (27 rows, FARE-anchored, post pharmacist review 2026-05-05)
+│       ├── peg_validation.csv                            ← PEG validation (4 regex, USP-NF-anchored)
+│       ├── carmine_validation.csv                        ← carmine validation (24 rows, 21 CFR + GSRS)
+│       ├── allergens_fullcatalog_flagged.csv             ← raw + 6 allergen-flag cols (gitignored, 174 MB)
+│       ├── dpi_label_analysis.csv                        ← DPI milk-warning per set_id
+│       ├── peg_label_analysis.csv                        ← PEG-warning per set_id
+│       ├── carmine_label_analysis.csv                    ← carmine-warning per set_id
+│       └── corpus_test_{milk,peg,carmine}.csv            ← deterministic corpus regression
 │
-├── bulk-data/                         <- Raw DailyMed bulk download (April
-│                                         2026): 159,431 ZIP files across
-│                                         human-otc/, human-prescription/,
-│                                         homeopathic/, other/.
+├── bulk-data/                         ← raw DailyMed bulk download (April 6, 2026; gitignored)
+│   ├── human-otc/                     ← ~87K ZIPs across 11 subfolders
+│   ├── human-prescription/            ← ~54K ZIPs across 6 subfolders
+│   ├── homeopathic/                   ← ~16K ZIPs in 1 subfolder
+│   └── other/                         ← ~2.5K ZIPs in 1 subfolder (remainder labels)
 │
 └── analysis/
-    ├── phase1_paper_analysis.md       <- Critical analysis of the Portuguese
-    │                                     source study. Composite ScholarEval
-    │                                     score: 2.9/5.
-    ├── findings.md                    <- Pilot analytical results.
-    ├── limitations.md                 <- Flagging methodology + known
-    │                                     limitations of pilot.
-    └── validation_table_review.md     <- Pending changes log for the bulk
-                                          validation table, with source
-                                          provenance for each decision and
-                                          a pharmacist consultation list (Q1-Q8)
-                                          for decisions awaiting expert review.
+    └── allergens/
+        ├── methodology.md             ← cross-allergen methodology (Parts 1-7)
+        ├── narrative_draft.md         ← cross-allergen narrative draft
+        ├── limitations.md             ← per-allergen limitations
+        ├── literature.md              ← annotated bibliography
+        ├── reconciliation_pass.md     ← cross-workflow consistency tracker
+        ├── gluten/
+        │   ├── source_paper_critique_gluten.md        ← critique of Figueiredo 2025
+        │   ├── findings_fullcatalog_gluten.md         ← full-catalog findings (gitignored draft)
+        │   └── validation_table_review_gluten.md      ← gluten validation table review
+        ├── milk/
+        │   ├── research_milk.md                       ← primary-source brief
+        │   └── findings_milk.md                       ← milk findings
+        ├── peg/
+        │   ├── research_peg.md
+        │   └── findings_peg.md
+        └── carmine/
+            ├── research_carmine.md
+            └── findings_carmine.md
 ```
 
 ---
 
-## Methodology
+## Naming conventions glossary
 
-### Phase 1: Paper Analysis
-
-Before collecting any US data, we critically evaluated the Portuguese source
-study to determine whether it was solid enough to anchor a journalism piece and
-whether US replication was viable. Two Claude skills were used:
-
-- **scientific-critical-thinking** -- a structured framework for evaluating
-  methodology, detecting bias, assessing evidence quality, evaluating claims,
-  and checking logical consistency.
-
-- **scholar-evaluation** -- the ScholarEval framework, which scores a paper
-  across 8 dimensions (problem formulation, literature review, methodology,
-  data collection, analysis, results, writing, citations) on a 1-5 scale.
-  The paper scored 2.9/5: publishable as a preliminary descriptive survey,
-  with significant caveats about conflating excipient names with allergen
-  presence.
-
-Verdict: the study is solid enough to anchor journalism IF the framing is
-precise -- "patients can't tell from labels" rather than "drugs contain
-gluten." US replication via DailyMed would actually be stronger due to
-structured XML data and larger sample sizes.
-
-Full analysis: `analysis/phase1_paper_analysis.md`
-
-### Phase 2: Data Collection
-
-Data was collected programmatically using `pull_dailymed.py`, a Python script
-that hits DailyMed's public API. No AI agents browsed the web or scraped pages.
-
-
-#### How the script works
-
-**Step 1 -- Discover products.** The script calls DailyMed's JSON API
-(`/services/v2/spls.json?drug_name=acetaminophen`) and paginates through all
-results, 100 at a time. It collects a `set_id` (DailyMed's unique label
-identifier) for every product matching "acetaminophen" or "ibuprofen." This
-list is cached to `.setid_cache.json` so it never re-runs.
-
-**Step 2 -- Download labels.** For each set_id, the script fetches the full SPL
-XML document from DailyMed's XML endpoint
-(`/services/v2/spls/{setid}.xml`). Each XML file is cached individually in
-`.xml_cache/`. If the script is interrupted (Ctrl+C), it skips
-already-downloaded files on restart. Rate limiting is adaptive: starts at 0.5s
-between requests, backs off to 5-10s if DailyMed returns HTTP 429, then
-gradually recovers.
-
-**Step 3 -- Parse XML.** Each SPL document is structured HL7 XML. The script
-walks the XML tree to extract 39 fields per product: drug name, NDC code,
-dosage form, route, active ingredients (with UNII codes and strengths),
-inactive ingredients (with UNII codes), manufacturer, approval info, marketing
-status, physical characteristics (color, shape, imprint), and packaging info.
-One SPL label can contain multiple `manufacturedProduct` blocks (different
-NDCs or strengths) -- each becomes its own CSV row.
-
-**Step 4 -- Write CSV.** All extracted data goes into `dailymed_raw.csv`.
-
-#### Error recovery
-
-The initial run produced 44 errors. Three recovery strategies were applied:
-
-1. **Retry** -- recovered 29 products (transient network failures)
-2. **DESCRIPTION prose parsing** -- recovered 10 prescription labels that used
-   a different XML structure (no structured `<ingredient>` elements; excipients
-   were embedded in freetext description sections)
-3. **Web page scraping** -- recovered 3 labels with malformed XML by fetching
-   the DailyMed web page and parsing the HTML instead
-4. **Unrecoverable** -- 2 products returned 404 (removed from DailyMed between
-   search indexing and retrieval). Logged in `pull_errors.txt`.
-
-#### Misspelling sweep
-
-DailyMed contains products with misspelled active ingredient names. The API
-was searched for common misspellings of both drugs:
-
-- "acetominophen": 5 hits. 2 added to dataset (Scot-Tussin products), 2
-  excluded (propoxyphene, withdrawn from US market 2010), 1 already captured.
-- "acetamenophen", "acetamiophen", "acetaminiphen": 0 hits each.
-- "ibuprofin", "ibuprophen", "ibuprofein": 0 hits each.
-
-#### Exclusions
-
-- Injectable formulations (33 products: IV acetaminophen, IV ibuprofen) --
-  removed because the analysis focuses on oral medications celiac patients
-  swallow.
-- Antiasthmatics/bronchodilators -- dropped entirely. The Portuguese study
-  included them as a control group (inhalers don't use starch excipients, so
-  always 0%). 
-
-  I wanted to cut down work for EDA. 
-
-#### Final dataset
-
-6,605 products: 4,986 acetaminophen, 1,619 ibuprofen. Both single-ingredient
-and combination products (e.g., Tylenol PM, NyQuil, Advil Cold & Sinus) are
-included because that reflects the real OTC landscape celiac patients face.
-
-### Phase 3: Analysis
-
-Each product was classified using the excipient validation table (see next
-section) and the results were cut by drug category, dosage form, OTC vs.
-prescription, single vs. combination, and sources of uncertainty. A comparison
-to the Portuguese findings was included with methodological context.
-
-Full results: `analysis/findings.md`
-Full limitations: `analysis/limitations.md`
-
-### Phase 4: Full DailyMed Catalog Extraction
-
-The pilot's 6,605-product dataset (acetaminophen + ibuprofen) was expanded to
-the full DailyMed catalog. Method:
-
-1. **Bulk download** of every DailyMed label as ZIP archives from
-   https://dailymed.nlm.nih.gov/dailymed/spl-resources-all-drug-labels.cfm.
-   159,431 ZIP files across four download categories: human OTC labels,
-   human prescription labels, homeopathic labels, and remainder labels
-   (vaccines, devices, bulk ingredients, dietary supplements, allergenics).
-2. **`scripts/extract_bulk.py`** parses every ZIP, extracts 43 fields per
-   product from the SPL XML, and writes `data/dailymed_bulk_raw.csv`.
-   Result: 199,961 product rows, 0 errors.
-3. No filtering at extraction time. All routes, all dosage forms, all drug
-   categories. Filtering belongs in analysis, not extraction.
-4. New `bulk_category` field distinguishes human_otc / human_prescription /
-   homeopathic / other based on download source folder.
-5. New `dea_schedule` field extracted from XML policy elements.
-6. `brand_generic` classification is deterministic based on FDA application
-   number prefix (ANDA → generic, NDA → brand, BLA → brand, otherwise →
-   otc_monograph).
-
-### Phase 5: Bulk Excipient Validation Table
-
-The pilot's 48-entry validation table was insufficient for the full catalog,
-which contains 10,019 unique excipient strings. Method:
-
-1. **`scripts/build_excipient_list.py`** runs a word-boundary keyword search
-   across all unique excipient strings using 20 keywords drawn from the
-   Portuguese study, Latin botanical names for gluten grains, and starch
-   chemistry terms. Output: a research worklist of new gluten-adjacent terms.
-2. **`scripts/build_validation_table.py`** assembles the complete bulk
-   validation table at `data/bulk/excipient_validation.csv` (171 entries:
-   48 pilot + 123 new). Pilot entries are preserved with bulk catalog product
-   counts appended; the pilot CSV itself remains unchanged. Three pilot
-   entries (GLUCOSE SYRUP, LIQUID GLUCOSE, MALTODEXTRIN) have bulk-table
-   revisions applied via a `PILOT_OVERRIDES` dict in the script.
-3. New entries cover starch derivatives, gums, oat-related compounds,
-   wheat/barley/rye derivatives, the cyclodextrin family, ICODEXTRIN,
-   MALTODEXTRIN/VP COPOLYMER, and 21 keyword false positives flagged as
-   `gluten_free` with explicit "Keyword false positive" rationales (Option A:
-   the validation table is the single source of truth).
-4. The cyclodextrin family (15 string variants) was added as interim
-   `gluten_free` based on the Gluten Intolerance Group's January 2019 PDF
-   "Medications and the Gluten-Free Diet." This source is older than the
-   project's 5-year cutoff and is flagged as stale, pending pharmacist
-   consultation.
-5. **`analysis/validation_table_review.md`** rigorously catalogues every
-   pending classification decision with explicit source provenance (current
-   vs stale) and an "Open Questions for Pharmacist Consultation" list
-   (Q1-Q8) for decisions that need expert input.
-
-Final flag distribution in the bulk validation table: 105 gluten_free,
-35 unknown, 31 contains_gluten.
-
----
-
-## Excipient Classification System
-
-### Three-Tier Flags
-
-Every product gets one of four flags based on its inactive ingredients:
-
-| Flag | Meaning |
+| Token | Meaning |
 |---|---|
-| `contains_gluten` | At least one excipient is a confirmed gluten grain or explicitly names a gluten source (wheat, rye, barley) |
-| `unknown` | At least one excipient is a starch or starch derivative whose source grain is not specified on the label. No excipient is confirmed gluten. |
-| `gluten_free` | All excipients either specify a non-gluten source, are not grain-derived, or are not in the validation table |
-| `no_data` | The label lists no inactive ingredients at all |
+| `fullcatalog` | The April 2026 DailyMed bulk-download snapshot — all 199,961 NDC-level rows across every drug. |
+| `gluten` | Gluten-specific scripts and data. Uses the 4-tier flag system (`gluten_free` / `unknown` / `contains_gluten` / `no_data`). |
+| `allergens` | Batch grouping for the milk + PEG + carmine work. Three flags emitted per row by a single `flag_allergens_fullcatalog.py` pass. Each uses the 3-tier system (`contains_<allergen>` / `<allergen>_free` / `no_data`). |
 
-A product's flag is determined by its worst excipient: if any excipient is
-`contains_gluten`, the product is `contains_gluten`. If none are confirmed
-but any are `unknown`, the product is `unknown`. If all are clear, it's
-`gluten_free`.
-
-### What "Unknown" Means
-
-A product flagged `unknown` **does not mean it contains gluten.** It means a celiac patient reading the label cannot determine whether the product is safe. The label says something
-like "sodium starch glycolate" without specifying whether the starch comes
-from corn (safe) or wheat (not safe). The flag measures an information gap,
-not a safety hazard.
-
-In practice, the vast majority of these products almost certainly contain
-zero gluten -- pharmaceutical-grade starch glycolate is predominantly
-potato- or corn-derived. But "almost certainly" is not the same as "the
-label confirms it," and that gap is what this project measures.
-
-### Key Judgment Calls
-
-**Xanthan gum** -- Reclassified from `unknown` (matching the Portuguese study)
-to `gluten_free` based on National Celiac Association guidance, which states
-xanthan gum does not contain gluten. This was the single largest
-classification decision: it moved 727 products from `unknown` to
-`gluten_free`. Source: https://nationalceliac.org/celiac-disease-questions/does-xanthan-gum-contain-gluten/
-
-**Bare "starch" (no source specified)** -- Flagged `unknown`. FDA Compliance
-Policy Guide 578.100 states that unqualified "starch" in the US is the common
-name for corn starch. However, a celiac patient reading the label has no way
-to know this regulatory technicality. The flag reflects patient-facing
-information, not regulatory interpretation. (Note: whether CPG 578.100
-actually applies to drug inactive ingredient labeling, or only to food, is an
-open -- see Next Steps.)
-
-**Croscarmellose sodium vs. sodium starch glycolate (SSG)** -- These are
-frequently confused because the names sound similar, but they are completely
-different compounds. Croscarmellose sodium is cellulose-based (derived from
-wood pulp or cotton) and is inherently gluten-free regardless of source. SSG
-is starch-based and depends on the source grain. Croscarmellose sodium is
-flagged `gluten_free`; SSG without a specified source is flagged `unknown`.
-
-**Maltodextrin** -- Flagged `gluten_free` despite "malt" in the name.
-Maltodextrin is produced by partial hydrolysis of corn starch. It is
-chemically unrelated to barley malt. Similarly, maltitol, ethyl maltol, and
-isomalt are excluded from the validation table entirely -- the substring
-"malt" is not sufficient to flag an excipient.
-
-**Rice bran** -- Flagged `gluten_free`. Unspecified "bran" defaults to
-`contains_gluten` (most common source is wheat), but when the label specifies
-rice, it is evaluated by its source. Rice is not a gluten-containing grain
-(21 CFR 101.91).
-
-### The Validation Tables
-
-There are two validation tables in this project:
-
-**`data/eda/excipient_validation.csv`** (pilot) — 48 entries drawn from three
-sources: the Portuguese study's Table 1 (14 EU excipient terms), the FDA
-Inactive Ingredient Database (standard US naming), and actual strings observed
-on product labels in the pilot's DailyMed data. Preserved unchanged as a
-historical snapshot of pilot-era decisions.
-
-**`data/bulk/excipient_validation.csv`** (bulk) — 171 entries (48 pilot +
-123 new). Generated by `scripts/build_validation_table.py` from the pilot
-table plus new entries discovered via keyword search across the full
-DailyMed catalog. Three pilot entries have bulk-table revisions applied
-via the script's `PILOT_OVERRIDES` dict (the pilot CSV itself is left
-unchanged). Final flag distribution: 105 gluten_free, 35 unknown,
-31 contains_gluten.
-
-Each entry in either table includes the exact string to match against label
-data, the flag decision, a rationale explaining the chemical identity, a
-citation URL, and an EU equivalent name where applicable. All new excipients
-were added with documented rationale and source — no blind additions.
-
-`analysis/validation_table_review.md` catalogues pending changes with explicit
-source provenance for every decision and lists open questions awaiting
-pharmacist consultation.
+So `flag_gluten_fullcatalog.py` flags the gluten-filtered full-catalog dataset
+for gluten; `flag_allergens_fullcatalog.py` flags the unfiltered raw full
+catalog for milk + PEG + carmine in one pass.
 
 ---
 
-## Role of AI in This Project
+## How to reproduce
 
-### What Claude Did
+### Prerequisites
 
+- **Python 3.9+** with the standard library (no third-party packages required;
+  the pipeline uses only `csv`, `re`, `xml.etree`, `pathlib`, `zipfile`, `sys`).
+- **DailyMed bulk download** at `bulk-data/{human-otc,human-prescription,
+  homeopathic,other}/`. Download from
+  <https://dailymed.nlm.nih.gov/dailymed/spl-resources-all-drug-labels.cfm>.
+  ~159,431 ZIP files; ~22 GB unzipped.
+- **`FDA-IID-recent-update.csv`** at the project root. Download the FDA
+  Inactive Ingredient Database from
+  <https://www.fda.gov/drugs/drug-approvals-and-databases/inactive-ingredients-database-download>
+  and convert to CSV (or use the in-repo snapshot if present).
 
-- **Designed the methodology.** The three-tier classification system, the
-  excipient validation approach, the reporting structure were all designed by Claude in
-  conversation with the user.
-- **Built the excipient validation tables.** For the pilot, Claude extracted
-  all 511 unique excipient strings from the 6,605-product dataset and built
-  a 48-entry validation table. For the full catalog, Claude extracted all
-  10,019 unique excipient strings from the 199,961-product bulk dataset, ran
-  a keyword search to find gluten-adjacent terms, classified each with
-  rationale and citations, and built a 171-entry validation table. All
-  research used FDA documentation, current celiac organization guidance
-  (National Celiac Association), and pharmaceutical references.
-- **Critiqued the source study.** The Phase 1 paper analysis was produced using
-  two Claude skills: `scientific-critical-thinking` and `scholar-evaluation`.
+All scripts use `Path(__file__).parent.parent` to resolve to the project root,
+so they should be run from the project root:
 
-### What Claude Did NOT Do
+```bash
+python3 scripts/<script_name>.py
+```
 
-- **No data was AI-generated.** Every data point comes from DailyMed's public
-  API and XML endpoints. Claude did not fabricate, infer, or hallucinate any
-  product data.
-- **No clinical claims.** Claude did not assess whether any product is safe or
-  unsafe for celiac patients. The analysis measures label information only.
+### Pipeline 1 — Gluten full catalog
 
-### Claude Skills Used
+```bash
+# 1. Extract the entire bulk download → 199,961 raw rows (~30 min)
+python3 scripts/extract_fullcatalog_raw.py
+#    → data/fullcatalog/dailymed_fullcatalog_raw.csv
 
-Two specialized Claude skills were loaded for this project:
+# 2. Filter to FDA-recognized swallowed human medications (6-step pipeline; ~2 min)
+python3 scripts/filter_gluten_fullcatalog.py
+#    → data/fullcatalog/gluten_fullcatalog_filtered.csv (~72,358 rows)
 
-- **scientific-critical-thinking** -- Provides a structured framework for
-  evaluating scientific claims: methodology critique, bias detection, evidence
-  quality assessment, claim evaluation, and logical consistency checking. Used
-  in Phase 1 (paper analysis) and Phase 3 (interpretation section of
-  findings.md).
-- **scholar-evaluation** -- The ScholarEval framework for structured
-  assessment of scholarly work across 8 dimensions with quantitative scoring.
-  Used in Phase 1 only.
+# 3. Build / refresh gluten validation table (deterministic)
+python3 scripts/build_gluten_excipient_list.py    # → research worklist
+python3 scripts/build_gluten_validation.py        # → 171-entry table
 
-Both skills are relevant to evaluating and contextualizing research. They had
-no role in data collection or the technical pipeline.
+# 4. Apply gluten flags (~1 min)
+python3 scripts/flag_gluten_fullcatalog.py
+#    → data/fullcatalog/gluten_fullcatalog_flagged.csv
 
+# 5. Run full-catalog analysis
+python3 scripts/analyze_gluten_fullcatalog.py
+```
+
+### Pipeline 2 — Allergens full catalog (milk + PEG + carmine)
+
+This pipeline starts from the **raw** catalog (not the gluten-filtered one),
+because the milk harm anchor is dry-powder inhalers — which the gluten
+pipeline drops at filter step 3.
+
+```bash
+# 1. Build the three allergen validation tables (FARE / USP-NF / 21 CFR + GSRS anchored)
+python3 scripts/build_allergens_validation.py
+#    → data/fullcatalog/{milk,peg,carmine}_validation.csv
+
+# 2. Apply 3 allergen flags to RAW catalog in one pass (~5 min)
+python3 scripts/flag_allergens_fullcatalog.py
+#    → data/fullcatalog/allergens_fullcatalog_flagged.csv (199,961 rows × 49 cols)
+
+# 3. Compute prevalence + slices for findings docs
+python3 scripts/analyze_allergens_fullcatalog.py
+```
+
+### Pipeline 3 — Per-allergen contraindication-level label analysis
+
+For each allergen, parse SPL XML for every set_id flagged
+`contains_<allergen>` and classify warning level: §4 contraindication / boxed
+warning / §5 warning / OTC allergy alert / silent. Patterns require an
+allergy-context token within 80 chars of the allergen name (see
+`methodology.md` §5).
+
+```bash
+# DPI milk warnings (~1 min; 19 set_ids)
+python3 scripts/analyze_dpi_labels.py
+#    → data/fullcatalog/dpi_label_analysis.csv
+
+# Carmine warnings (~1 min; 156 set_ids)
+python3 scripts/analyze_carmine_labels.py
+#    → data/fullcatalog/carmine_label_analysis.csv
+
+# PEG warnings (~15-20 min; 16,760 set_ids in oral-solids slice)
+python3 scripts/analyze_peg_labels.py
+#    → data/fullcatalog/peg_label_analysis.csv
+```
+
+### Pipeline 4 — Corpus tests (regression check)
+
+A deterministic regression generator. Run after any change to the validation
+tables to see exactly which DailyMed excipient strings each rule matches
+(or doesn't).
+
+```bash
+python3 scripts/build_corpus_tests.py
+#    → data/fullcatalog/corpus_test_{milk,peg,carmine}.csv
+```
+
+Re-running the script on identical inputs produces byte-identical CSVs
+(MD5-verified). The output flags every "inactive" rule (rule defined in the
+validation table but no DailyMed string matches it under the current
+snapshot) for transparency.
 
 ---
 
-## Known Limitations
+## Where to read findings
 
-A brief summary. Full documentation is in `analysis/limitations.md`.
+| You want to read about… | Read this |
+|---|---|
+| Cross-allergen narrative draft (the journalism piece) | `analysis/allergens/narrative_draft.md` |
+| Methodology — shared architecture + per-allergen | `analysis/allergens/methodology.md` |
+| Per-allergen limitations | `analysis/allergens/limitations.md` |
+| Annotated bibliography (PMIDs, CFR, FDA, EMA, FARE, USP-NF) | `analysis/allergens/literature.md` |
+| Cross-workflow consistency tracker | `analysis/allergens/reconciliation_pass.md` |
+| Gluten — Portuguese source study critique | `analysis/allergens/gluten/source_paper_critique_gluten.md` |
+| Gluten — full-catalog findings | `analysis/allergens/gluten/findings_fullcatalog_gluten.md` |
+| Gluten — validation table review | `analysis/allergens/gluten/validation_table_review_gluten.md` |
+| Milk — primary-source research brief | `analysis/allergens/milk/research_milk.md` |
+| Milk — findings (DPI harm anchor + oral catalog) | `analysis/allergens/milk/findings_milk.md` |
+| PEG — primary-source research brief (incl. excluded adjacent families) | `analysis/allergens/peg/research_peg.md` |
+| PEG — findings (oral-solids slice + warning-section silence) | `analysis/allergens/peg/findings_peg.md` |
+| Carmine — primary-source research brief | `analysis/allergens/carmine/research_carmine.md` |
+| Carmine — findings (landscape view, no pre-filtering) | `analysis/allergens/carmine/findings_carmine.md` |
 
-- **Label-based only.** Actual gluten protein levels are not measured. A
-  product flagged `unknown` may contain zero gluten.
-- **Cross-contamination undetectable.** Manufacturing cross-contamination
-  cannot be identified from labels.
-- **KIT components not extracted.** 428 KIT products (multi-component
-  packages like day/night combo packs) show `no_data` because the script
-  parsed the KIT-level label, not the individual component parts inside it.
-  The component data exists in the cached XML but was not extracted. See
-  Next Steps, task 3.
-- **DailyMed index completeness unverified.** We did not cross-reference
-  against the FDA NDC Directory. Products missing from DailyMed's search
-  index would be absent from our dataset. However, DailyMed is supposed to be the most complete and up-to-date database of labels and something the FDA recommends for patients. 
-- **Snapshot in time.** Data pulled March 26, 2026. Formulations and labels
+---
+
+## Warning-pattern vocabulary (`ALLERGY_CONTEXT`)
+
+The label-analysis scripts (`analyze_dpi_labels.py`,
+`analyze_peg_labels.py`, `analyze_carmine_labels.py`) detect whether an SPL
+warning section genuinely discusses an allergen's allergic reactions, as
+opposed to merely listing the allergen name as an ingredient inside that
+section. A warning match requires both an allergen name AND an allergy-context
+token within 80 characters of each other:
+
+```python
+ALLERGY_CONTEXT = r"(?:allerg|hypersens|anaphyla|contraindicat)"
+```
+
+The four token roots cover inflected forms (`allergy` / `allergic` /
+`allergen` / `allergies`; `hypersensitivity` / `hypersensitive`;
+`anaphylaxis` / `anaphylactic`; `contraindicated` / `contraindication`).
+Anchored to:
+
+- **21 CFR 201.22** — FDA sulfite warning mandate, the only FDA-mandated
+  drug-allergy warning rule. Uses "allergic-type reactions … anaphylactic …
+  life-threatening …"
+- **AAAAI/ACAAI 2022 Drug Allergy Practice Parameter** (PMID 36122788) —
+  peer-reviewed clinical vocabulary.
+- **Advair Diskus §4 contraindication template** — "contraindicated in
+  patients with severe hypersensitivity to milk proteins."
+
+Bare-name patterns (e.g. `\bpolyethylene\s+glycol` alone) were explicitly
+rejected after the 2026-04-23 reconciliation pass found three PEG label
+"warnings" that were actually ingredient-list mentions inside boxed-warning
+sections, not real warnings. The corrected count is 0 / 16,585 parseable
+oral-solid PEG labels carry a PEG-allergy warning. Full discussion in
+`analysis/allergens/methodology.md` §5 and
+`analysis/allergens/reconciliation_pass.md` Fix 1.
+
+---
+
+## Known limitations
+
+A summary. Full per-allergen detail in
+`analysis/allergens/limitations.md`.
+
+- **Label-based only.** No ELISA / HPLC measurement of actual allergen
+  content. A product flagged `unknown` may contain zero allergen.
+  Cross-contamination during manufacturing is undetectable from labels.
+- **NDC-level unit of analysis.** A single SPL label can contain multiple
+  NDC entries with different excipient profiles. Throughout, "176 carmine
+  products" is NDC-level; "156 carmine set_ids" is SPL-label-level.
+- **Snapshot in time.** Data pulled April 6, 2026. Formulations and labels
   change.
-- **Pilot scope: two drug categories.** The pilot dataset (Phases 1-3)
-  covered only acetaminophen and ibuprofen. The full DailyMed catalog
-  (Phases 4-5) covers all drug categories — 199,961 products — but the
-  flagging pipeline that applies the validation table to the full catalog
-  has not yet been written.
-- **No dose-level analysis.** Excipient quantity per dose is not analyzed.
+- **Per-allergen scope decisions documented elsewhere.** Gluten
+  4-tier system + xanthan-gum reclassification (`limitations.md` §Gluten);
+  PEG tight scope excluding polysorbates / poloxamers / Cremophor /
+  Kollicoat / TPGS (`limitations.md` §PEG); milk lactulose reclassified
+  to `contains_milk` per FARE (`limitations.md` §Milk); carmine
+  word-boundary CARMINE regex to avoid CROSCARMELLOSE false-positive
+  (`limitations.md` §Carmine).
+- **Source study (Figueiredo 2025) is methodological reference, not
+  statistical replication.** US samples are 19-21× larger than the
+  Portuguese study. Direct percentage comparisons are reported with
+  caveats.
 
 ---
 
-## Key Decisions Log
+## Manual verifications (pending)
 
-| Decision | Choice | Rationale |
-|---|---|---|
-| Unit of analysis | NDC (not set_id) | Two NDCs under the same SPL label can have different excipient profiles. The NDC is what a patient encounters on the shelf. |
-| Xanthan gum classification | `gluten_free` | Per National Celiac Association guidance. Methodological departure from Portuguese study. Moved 727 products from `unknown` to `gluten_free`. |
-| Include combination products | Yes | Reflects the real OTC landscape celiac patients face. Source study also included all products "containing paracetamol/ibuprofen." |
-| Drop antiasthmatics | Yes | 0% findings in source study. Inhalers don't use starch excipients. No journalistic value. |
-| Bare "starch" flag | `unknown` | FDA CPG 578.100 says it legally means corn starch, but patients can't know that from the label. |
-| Data source | 100% DailyMed | The tool FDA recommends patients use. OpenFDA was rejected due to ~40% coverage gap. |
-| Include OTC and Rx | Both, reported separately | Matches source study. Both populations are relevant. |
-| Exclude injectables | Yes | Analysis focuses on oral medications patients swallow. |
-| Misspellings | Searched and added | DailyMed contains misspelled drug names. 2 products added from "acetominophen" search. |
+1. **Pharmacist spot-check across milk, PEG, and carmine validation tables.**
+   Every classification row carries a primary-source URL and an FDA IID
+   status flag (`in_iid` / `not_in_iid` from the local
+   `FDA-IID-recent-update.csv` snapshot). What's still missing is a
+   pharmacist's pass through each row to confirm the source-URL
+   classification matches pharmaceutical practice. Particularly important
+   for borderline cases (cyclodextrin family, source-unspecified starches,
+   hydroxyethyl starch, oats).
+
+2. **Manual `regulations.gov` docket spot-check (FDA-1998-P-0032).**
+   Programmatic access to regulations.gov returned HTTP 403 during fact
+   check, so 2020-2026 filings were not fully enumerated. The 2009 FDA
+   final rule (74 FR 207) said drugs would be addressed in a "separate
+   rulemaking"; no such drug rulemaking has been issued in the 17 years
+   since per Federal Register and FDA.gov searches through April 2026.
+   Manual docket spot-check would close the open question by enumerating
+   any post-2009 drug-carmine filings.
+
+3. **Gluten validation table — borderline case review.** The 8-question
+   pharmacist-consultation list in `analysis/allergens/gluten/validation_table_review_gluten.md`
+   covers ASO, SSG, cyclodextrins, maltodextrin, HES 130/0.4, HSH,
+   source-unspecified starches, and oats. Cyclodextrin classification
+   specifically rests on a 2019 Gluten Intolerance Group source flagged
+   stale; should be re-evaluated with current evidence.
+
+4. **Verify human-drug coverage in animal bulk downloads.** The April 2026
+   bulk extraction pulled the human-OTC, human-prescription, homeopathic,
+   and remainder buckets only. Spot-check the animal-drug bulk downloads
+   to confirm no manufacturer-side classification errors moved a human
+   medication into an animal bucket.
 
 ---
 
-## Next Steps / Open Tasks
+## Citation
 
-1. **Apply the bulk validation table to the full catalog.** Write
-   `scripts/flag_bulk.py` to read `data/dailymed_bulk_raw.csv` (199,961 rows)
-   and `data/bulk/excipient_validation.csv` (171 entries), apply gluten flags
-   per the worst-excipient rule, and write `data/bulk/dailymed_bulk_flagged.csv`.
-   This is the immediate next step after the validation table is finalized.
+If you use this repository for journalism, research, or replication:
 
-2. **Resolve pending validation table decisions.** See
-   `analysis/validation_table_review.md` for the catalogued open questions
-   awaiting pharmacist consultation (Q1-Q8: ASO, SSG, cyclodextrins,
-   maltodextrin, HES 130/0.4, HSH, source-unspecified starches generally,
-   oats). The cyclodextrin classification specifically rests on a stale
-   (2019) source and should be re-evaluated with current evidence.
+```
+Hidden Drug Allergens in US Drug Labels.
+Analysis of FDA DailyMed bulk download (April 6, 2026) for the labeling
+transparency of gluten, milk, PEG, and carmine excipients.
+GitHub repository [insert URL]. Snapshot date 2026-04-23.
+```
 
-3. **Bulk catalog analysis.** Once the flagged bulk dataset exists, run the
-   same cuts as the pilot (drug category, dosage form, OTC/Rx, etc.) across
-   all drug categories in the full catalog. The pilot covered only
-   acetaminophen + ibuprofen; the full catalog reveals whether the labeling
-   transparency gap is similar across other drug classes.
-
-4. **Decide on route filtering.** The bulk extraction includes all routes
-   (oral, topical, injectable, ophthalmic, etc.). Filtering by route is an
-   analysis-time decision. The user has indicated the analysis will likely
-   focus on oral routes only.
-
-5. **CPG 578.100 research.** Investigate whether FDA Compliance Policy Guide
-   578.100 ("starch" = corn starch) actually applies to drug inactive
-   ingredient labeling, or only to food. Determine whether it is a binding
-   regulation or just guidance. The project currently treats unqualified
-   "starch" on drug labels as `unknown` for patient-facing purposes
-   regardless.
-
-6. **KIT component extraction.** Update the pilot's `pull_dailymed.py` to
-   parse `<part>/<partProduct>` elements inside KIT labels, extracting each
-   component's excipients. This would recover the 428 KIT products flagged
-   `no_data` in the pilot. May not be needed if the bulk catalog supersedes
-   the pilot for the journalism piece.
-
-7. **FDA IIG cross-reference.** Cross-reference unique excipient strings
-   against the FDA Inactive Ingredient Database. Identify strings not in the
-   IIG and investigate why (OTC monograph products, non-standard naming
-   variants, recently added excipients, label errors).
-
-## Final Verification
-
-Before publication, the following manual checks should be completed:
-
-1. **Manually check the excipient validation table. Talk to a pharmacist.**
-   The 171-entry validation table at `data/bulk/excipient_validation.csv` was
-   built by Claude with documented rationale and citations for every entry,
-   but it has not been independently reviewed by a domain expert. A pharmacist
-   should walk through each entry, particularly the borderline cases catalogued
-   in `analysis/validation_table_review.md` (cyclodextrins, sodium starch
-   glycolate, oats, source-unspecified starches, hydroxyethyl starch).
-
-2. **Verify if any human drugs are in animal bulk downloads we did not download
-   from DailyMed.** DailyMed offers separate bulk download buckets for animal
-   drugs. Our bulk extraction (April 2026) only pulled the human OTC, human
-   prescription, homeopathic, and remainder-labels buckets. There is a
-   possibility that legitimate human drugs ended up in an animal-drug bulk
-   bucket due to manufacturer-side classification errors. Spot-check the animal
-   drug downloads against the final filtered dataset to confirm no human
-   medications were missed.
+Primary source bibliography in `analysis/allergens/literature.md`.

@@ -77,122 +77,49 @@ to the journalism angle, which focuses on oral medications celiac patients swall
 
 ## Project Phases
 
-### Phase 1: Paper Analysis ✅ COMPLETE
-- [x] Critical analysis of methodology using scientific-critical-thinking skill
-- [x] Structured evaluation using scholar-evaluation skill (composite: 2.9/5)
-- [x] Key question: Is this study solid enough to anchor a journalism piece? → YES, with framing caveats
-- [x] Key question: What are the honest limitations to disclose to readers? → 6 key caveats documented
-- [x] Key question: Is US replication viable with DailyMed? → YES, and would be stronger
-- [x] Output: analysis/phase1_paper_analysis.md
-
-### Phase 2: US Data Collection ✅ COMPLETE
-- [x] Build excipient_validation.csv — 48 entries from 3 sources (Portuguese study,
-      FDA IIG, DailyMed data). Restructured from EU-mapping to comprehensive lookup table.
-- [x] Decide on starch (unspecified): `unknown`
-- [x] Decide on xanthan gum: reclassified to `gluten_free` per National Celiac Association
-      (departure from Portuguese study). Source: https://nationalceliac.org/celiac-disease-questions/does-xanthan-gum-contain-gluten/
-- [x] Key finding: sodium carboxymethyl starch = sodium starch glycolate (same compound);
-      croscarmellose sodium is DIFFERENT (cellulose-based, gluten-free)
-- [x] Key finding: FDA CPG 578.100 says unqualified "starch" in US = corn starch,
-      but a celiac patient reading the label wouldn't know this rule
-- [x] Pull acetaminophen products from DailyMed — 4,986 products
-- [x] Pull ibuprofen products from DailyMed — 1,619 products
-- [x] Misspelling sweep — searched for common misspellings, added 2 Scot-Tussin products
-- [x] Second-pass excipient audit — extracted 511 unique excipient strings, identified
-      all gluten-adjacent terms, added to validation table with rationale and citations
-- [x] NDC Directory spot-check — decided to skip, documented as limitation
-- [x] Exclude injectables — 33 removed (IV acetaminophen, IV ibuprofen)
-- [x] Include single-ingredient AND combination products (3,259 single, 3,346 combo)
-- [x] Include both generic and branded products (2,747 generic, 128 brand, 3,763 OTC monograph)
-- [x] Apply flags → dailymed_flagged.csv using four-tier system:
-      gluten_free / unknown / contains_gluten / no_data
-- [x] Final dataset: 6,605 products
-
-### Phase 3: Data Analysis ✅ COMPLETE
-- [x] Count gluten excipient presence by drug category and dosage form
-- [x] Count by OTC vs Rx, and OTC/Rx × category cross-tabs
-- [x] Count by single-ingredient vs combination
-- [x] Rank sources of uncertainty by excipient
-- [x] Compare US findings to Portugal findings (methodological reference)
-- [x] Identify notable differences and possible explanations
-- [x] Document findings objectively in analysis/findings.md with separate
-      interpretation section using scientific critical thinking
-- [x] Note limitations honestly in analysis/limitations.md (includes flagging methodology)
-- [x] Key results: 97.2% gluten_free, 2.7% unknown, 0.02% contains_gluten
-      (excluding no_data). 1 product with confirmed wheat starch. 92.8% of
-      uncertainty from single excipient (SSG Type A, no source specified).
+All three pilot phases are complete. Canonical artifacts:
+- **Phase 1 (paper analysis):** `analysis/allergens/gluten/source_paper_critique_gluten.md`.
+- **Phase 2 (US data collection, 6,605-product pilot):** `data/pilot/gluten_pilot_flagged.csv`; pilot-specific decisions in `analysis/allergens/gluten/methodology_pilot.md`.
+- **Phase 3 (pilot data analysis):** `analysis/allergens/gluten/findings_pilot_gluten.md`; limitations in `analysis/allergens/limitations.md` § Gluten.
 
 ---
 
 ## Output File Structure
 
-All output files live in the project directory as follows. 
-Claude must save to these exact paths and never overwrite raw data files.
-
-```
-project/
-├── CLAUDE.md                          ← this file
-├── SESSION_LOG.md                     ← updated at end of every session
-│
-├── scripts/                           ← all data extraction and processing scripts
-│   ├── extract_bulk.py                ← full-catalog extraction (bulk ZIPs → CSV)
-│   ├── pull_dailymed.py               ← pilot extraction (API → CSV, aceto+ibu only)
-│   ├── build_excipient_list.py        ← keyword search, builds research worklist
-│   └── build_validation_table.py      ← assembles complete validation CSV
-│
-├── data/
-│   ├── dailymed_bulk_raw.csv          ← full catalog (199,961 rows from bulk download)
-│   ├── bulk/                          ← full-catalog derived files
-│   │   ├── excipient_validation.csv   ← complete validation table (171 entries)
-│   │   └── excipient_research_worklist.csv  ← intermediate (new terms researched)
-│   └── eda/                           ← pilot/exploratory data (acetaminophen + ibuprofen)
-│       ├── dailymed_raw.csv           ← pilot raw pull, never modified
-│       ├── dailymed_flagged.csv       ← pilot data + gluten flag columns applied
-│       └── excipient_validation.csv   ← pilot validation table (48 entries,
-│                                         preserved as historical snapshot)
-│
-├── bulk-data/                         ← raw DailyMed bulk download (April 6, 2026)
-│   ├── human-otc/                     ← ~87K ZIPs across 11 subfolders
-│   ├── human-prescription/            ← ~54K ZIPs across 6 subfolders
-│   ├── homeopathic/                   ← ~16K ZIPs in 1 subfolder
-│   └── other/                         ← ~2.5K ZIPs in 1 subfolder (remainder labels)
-│
-└── analysis/
-    ├── phase1_paper_analysis.md       ← methodology critique and scholar evaluation
-    ├── findings.md                    ← analytical conclusions, updated per phase
-    └── limitations.md                 ← running log of methodological caveats
-```
+Project file layout, per-file purposes, and how to reproduce the pipelines: see
+`README.md` § "Repository structure" and § "How to reproduce". Claude must save
+to those exact paths and never overwrite raw data files.
 
 **Note on script execution:** All scripts in `scripts/` use `Path(__file__).parent.parent`
 (or equivalent) to resolve to the project root, so they should be run from the project
-root: `python3 scripts/build_validation_table.py`
+root: `python3 scripts/build_gluten_validation.py`
 
 ### File Specifications
 
-**data/dailymed_bulk_raw.csv** — Full catalog extraction. 43 columns, 199,961 rows.
-Never modify after creation. Re-run `extract_bulk.py` to regenerate.
+**data/fullcatalog/dailymed_fullcatalog_raw.csv** — Full catalog extraction. 43 columns, 199,961 rows.
+Never modify after creation. Re-run `extract_fullcatalog_raw.py` to regenerate.
 
-**data/eda/dailymed_raw.csv** — Pilot dataset (acetaminophen + ibuprofen only). Never modify.
+**data/pilot/dailymed_pilot_raw.csv** — Pilot dataset (acetaminophen + ibuprofen only). Never modify.
 39 columns extracted from DailyMed SPL XML via API. Core columns: `drug_name, generic_name,
 brand_generic, category, dosage_form, route, active_ingredients, single_or_combo,
 excipients_raw, excipient_uniis, ndc_code, approval_number, approval_type,
 marketing_status, manufacturer, color, shape, imprint, set_id, dailymed_url`
 
-**data/eda/dailymed_flagged.csv** — Pilot data with gluten flags. Columns:
+**data/pilot/gluten_pilot_flagged.csv** — Pilot data with gluten flags. Columns:
 `drug_name, brand_generic, category, dosage_form, excipients_raw, gluten_flag
 (gluten_free/unknown/contains_gluten), flagged_excipients, ndc_code`
 
-**data/eda/excipient_validation.csv** — Pilot validation table (48 entries). One row per
+**data/pilot/gluten_pilot_validation.csv** — Pilot validation table (48 entries). One row per
 excipient decision. Columns: `fda_term, source, flag_decision (gluten_free/unknown/contains_gluten),
 rationale, source_url, eu_equivalent`
 
-**data/bulk/excipient_validation.csv** — Complete validation table for the full catalog
+**data/fullcatalog/gluten_validation.csv** — Complete validation table for the full catalog
 (171 entries: 48 pilot + 123 new after Apr 9 revisions). Same schema as the pilot
 table. Pilot entries are preserved and annotated with `Bulk catalog: N products.`
 in the rationale. New entries have `source = "dailymed_bulk"`. Three pilot entries
 have bulk-table revisions applied via the `PILOT_OVERRIDES` dict in
-`scripts/build_validation_table.py` — the pilot CSV itself remains unchanged as a
-historical snapshot. Generated by `scripts/build_validation_table.py` — re-running
+`scripts/build_gluten_validation.py` — the pilot CSV itself remains unchanged as a
+historical snapshot. Generated by `scripts/build_gluten_validation.py` — re-running
 the script regenerates the file deterministically.
 
 ---
@@ -227,14 +154,13 @@ If SESSION_LOG.md does not exist yet, create it. Always append — never overwri
 ---
 
 ## Known Methodological Limitations to Carry Forward
-These apply to the original study AND the US replication:
-- Analysis is label-based only — actual gluten levels are not measured
-- Cross-contamination during manufacturing cannot be detected this way
-- Some package inserts list "starch" without specifying the source
-- Xanthan gum is flagged precautionarily — not confirmed gluten-containing
-- Only 2 drug categories studied (acetaminophen, ibuprofen) — not all medications
-- Source study's 44.4% headline figure = labeling ambiguity ceiling, not confirmed gluten
-  (zero products in Table 3 contained wheat, rye, barley, or any confirmed gluten grain)
+
+Carry-forward limitations for all four allergens (gluten + milk + PEG + carmine)
+are consolidated in `analysis/allergens/limitations.md`. Key gluten caveats —
+label-based-only analysis, undetected cross-contamination, source-unspecified
+starch, precautionary xanthan flagging, and the source study's 44.4% figure as
+a labeling-ambiguity ceiling rather than confirmed gluten — live in
+`analysis/allergens/limitations.md` § Gluten.
 
 ## Key Decisions — RESOLVED
 - **Starch (unspecified):** flagged `unknown` — precautionary, consistent with source study.
@@ -256,19 +182,11 @@ These apply to the original study AND the US replication:
   (replaces original yes/no/uncertain — clearer semantics)
 - **New excipients:** any excipient found in US data but not on Portuguese list gets added
   to excipient_validation.csv only with documented rationale and source — no blind additions.
-- **Misspelling sweep (2026-03-27):** DailyMed contains products with misspelled active
-  ingredient names. Searched for common misspellings of both drugs. Results:
-  - `acetominophen`: 5 hits. Disposition:
-    - Rite Aid Multi-Symptom Cold and Flu Relief (NDC 11822-1988) — already in dataset
-    - Scot-Tussin Original Multi-Symptom (IriSys, NDC 15187-004) — ADDED to dataset
-    - Scot-Tussin Original SF Multi-Symptom (Scot-Tussin Pharmacal, NDC 0372-0004) — ADDED
-    - Propoxyphene Napsylate and Acetominophen (Andrx, NDC 62037-882) — EXCLUDED,
-      propoxyphene withdrawn from US market Nov 2010 (FDA safety announcement)
-    - Propoxyphene Napsylate and Acetominophen (Andrx, NDC 62037-930/931) — EXCLUDED,
-      same reason as above
-  - `acetamenophen`, `acetamiophen`, `acetaminiphen`: 0 hits each
-  - `ibuprofin`, `ibuprophen`, `ibuprofein`: 0 hits each
-  - Dataset updated from 6,636 → 6,638 rows after adding 2 Scot-Tussin products.
+- **Misspelling sweep (2026-03-27):** searched common misspellings of acetaminophen
+  and ibuprofen in DailyMed. Result: 2 Scot-Tussin products added (NDC 15187-004,
+  0372-0004); 3 propoxyphene products excluded (drug withdrawn from US market Nov
+  2010 per FDA safety announcement). Dataset 6,636 → 6,638 rows. Per-NDC dispositions
+  recorded in `data/pilot/dailymed_pilot_raw.csv`.
 - **Unit of analysis:** NDC-level (not set_id). Two NDCs under the same SPL label can have
   different excipient profiles — the NDC is what a patient encounters on the shelf.
 - **Reporting scope:** OTC, Rx, and combined — all three views reported separately.
@@ -276,7 +194,7 @@ These apply to the original study AND the US replication:
   Directory — DailyMed is the patient-facing tool and our sole authoritative source.
 
 ### Bulk Extraction Decisions (2026-04-07)
-These decisions apply to the full-catalog extraction (`extract_bulk.py` → `dailymed_bulk_raw.csv`).
+These decisions apply to the full-catalog extraction (`extract_fullcatalog_raw.py` → `dailymed_fullcatalog_raw.csv`).
 
 - **Data source: DailyMed bulk download (April 6, 2026).** Downloaded the complete catalog
   from https://dailymed.nlm.nih.gov/dailymed/spl-resources-all-drug-labels.cfm as ZIP archives.
@@ -286,7 +204,7 @@ These decisions apply to the full-catalog extraction (`extract_bulk.py` → `dai
   No injectable filtering, no drug-name filtering, no category filtering. Raw data = complete.
   Filtering belongs in analysis, not extraction.
 - **All fields come from XML or folder — zero AI inference.** Every column in
-  `dailymed_bulk_raw.csv` is either:
+  `dailymed_fullcatalog_raw.csv` is either:
   (a) mechanically parsed from the HL7 SPL XML using XPath element/attribute extraction,
   (b) derived from the folder path (`bulk_category`),
   (c) derived from the ZIP filename (`source_zip`, `set_id`), or
@@ -332,9 +250,9 @@ These decisions apply to the full-catalog extraction (`extract_bulk.py` → `dai
   across all 159,431 ZIPs.
 
 ### Bulk Excipient Validation Decisions (2026-04-09)
-These decisions apply to building `data/bulk/excipient_validation.csv` — the complete
+These decisions apply to building `data/fullcatalog/gluten_validation.csv` — the complete
 gluten-flagging table for the full catalog (171 entries after revisions; see also
-`analysis/validation_table_review.md` for the full pending-changes log).
+`analysis/allergens/gluten/validation_table_review_gluten.md` for the full pending-changes log).
 
 - **Discovery method: keyword search on unique excipient strings.** The bulk catalog
   contains 10,019 unique excipient strings (case-normalized to uppercase). A word-boundary
@@ -343,7 +261,7 @@ gluten-flagging table for the full catalog (171 entries after revisions; see als
   classified into the table and 22 were excluded as false positives, but the Apr 9
   revisions moved all 22 false positives into the table as `gluten_free` (Option A,
   see below) and added 16 cyclodextrin/dextrin entries that were missed by the original
-  keyword search. Final new-entry count: 123. Script: `build_excipient_list.py`.
+  keyword search. Final new-entry count: 123. Script: `build_gluten_excipient_list.py`.
 
 - **Keyword sources (3 categories, 20 keywords total):**
   1. **Portuguese study (Figueiredo et al. 2025) Table 1** — direct gluten excipient terms:
@@ -360,7 +278,7 @@ gluten-flagging table for the full catalog (171 entries after revisions; see als
   21 terms originally flagged as keyword false positives are now in the validation
   table as `gluten_free` with rationale "Keyword false positive — matched gluten-adjacent
   search term but compound is not grain-derived." This makes the validation table the
-  single source of truth — re-running `build_excipient_list.py` will not require
+  single source of truth — re-running `build_gluten_excipient_list.py` will not require
   re-excluding these by hand. Categories:
   - **Glycolate esters** (5): SODIUM GLYCOLATE, ETHYL GLYCOLATE, ALLYL AMYL GLYCOLATE,
     BUTYL GLYCOLATE, CEFATRIZINE PROPYLENE GLYCOLATE — esters of glycolic acid, unrelated
@@ -433,8 +351,8 @@ gluten-flagging table for the full catalog (171 entries after revisions; see als
   word for glucose. It is considered gluten free regardless of the starting material."*
   Source: https://nationalceliac.org/ingredients-people-question/
   GLUCOSE SYRUP and LIQUID GLUCOSE are pilot entries — overrides applied via the
-  PILOT_OVERRIDES dict in `scripts/build_validation_table.py`. The pilot CSV
-  (`data/eda/excipient_validation.csv`) is left unchanged as a historical record.
+  PILOT_OVERRIDES dict in `scripts/build_gluten_validation.py`. The pilot CSV
+  (`data/pilot/gluten_pilot_validation.csv`) is left unchanged as a historical record.
 
 - **All gums → `gluten_free`.** Plant exudate gums (acacia, mastic, boswellia, eucalyptus,
   karaya, styrax benzoin), legume gums (locust bean, guar, tara/Caesalpinia spinosa),
@@ -462,7 +380,7 @@ gluten-flagging table for the full catalog (171 entries after revisions; see als
   Gluten Intolerance Group (GIG) "Medications and the Gluten-Free Diet" PDF (Jan 2019).
   ⚠️ The GIG source is >5 years old (stale per the project's 5-year cutoff for fast-moving
   fields). Cyclodextrin classification is interim, pending pharmacist consultation
-  (see Q3 in `analysis/validation_table_review.md`). NOTE: cyclodextrins are CYCLIC
+  (see Q3 in `analysis/allergens/gluten/validation_table_review_gluten.md`). NOTE: cyclodextrins are CYCLIC
   oligosaccharides and chemically distinct from MALTODEXTRIN (a LINEAR polysaccharide) —
   their classifications are NOT chained.
 
@@ -482,7 +400,7 @@ gluten-flagging table for the full catalog (171 entries after revisions; see als
 
 ### Bulk Filtering Decisions (2026-04-10)
 These decisions apply to the 6-step filter pipeline that restricts the bulk DailyMed
-catalog to the analysis-ready dataset. Implemented in `scripts/filter_bulk.py`.
+catalog to the analysis-ready dataset. Implemented in `scripts/filter_gluten_fullcatalog.py`.
 
 - **Methodology statement.** The dataset includes only **FDA-recognized human
   medications that are directly delivered to the GI tract by swallowing**. Excluded:
@@ -499,8 +417,8 @@ catalog to the analysis-ready dataset. Implemented in `scripts/filter_bulk.py`.
 
 - **Pipeline is fully deterministic.** No AI / LLM / inference at any step. Every
   filter is a pandas equality check, set membership test, or word-boundary regex.
-  The validation table used in the downstream flagging step (`scripts/flag_bulk.py`)
-  is a static CSV produced earlier by `build_validation_table.py`.
+  The validation table used in the downstream flagging step (`scripts/flag_gluten_fullcatalog.py`)
+  is a static CSV produced earlier by `build_gluten_validation.py`.
 
 - **Step 1 — `document_type` filter.** Keep only the four human drug label types:
   HUMAN OTC DRUG LABEL, HUMAN PRESCRIPTION DRUG LABEL, HUMAN PRESCRIPTION DRUG LABEL
@@ -581,11 +499,11 @@ catalog to the analysis-ready dataset. Implemented in `scripts/filter_bulk.py`.
   LIQUID), "Prevention Oncology Mouth Rinse" (Prevention Health Sciences, LIQUID),
   "Amber Mouth Rinse" (Filo America, LIQUID).
 
-- **Final dataset.** `data/bulk/dailymed_bulk_filtered.csv` — **72,358 rows ×
+- **Final dataset.** `data/fullcatalog/gluten_fullcatalog_filtered.csv` — **72,358 rows ×
   43 columns** (all original raw columns preserved). Breakdown by `bulk_category`:
-  56,400 human_prescription + 15,958 human_otc. The downstream `flag_bulk.py` script
+  56,400 human_prescription + 15,958 human_otc. The downstream `flag_gluten_fullcatalog.py` script
   reads this file, applies the validation table, and writes
-  `data/bulk/dailymed_bulk_flagged.csv` with two added columns (`gluten_flag`,
+  `data/fullcatalog/gluten_fullcatalog_flagged.csv` with two added columns (`gluten_flag`,
   `flagged_excipients`). Final flag distribution: gluten_free 68,277 (94.36%),
   no_data 3,041 (4.20%), unknown 1,028 (1.42%), contains_gluten 12 (0.02%).
 
@@ -617,7 +535,7 @@ Do not make unsourced claims about celiac disease prevalence, gluten thresholds,
 FDA regulations, or medication safety.
 
 ### Never Overwrite Raw Data
-`data/dailymed_bulk_raw.csv` and `data/eda/dailymed_raw.csv` are sacred.
+`data/fullcatalog/dailymed_fullcatalog_raw.csv` and `data/pilot/dailymed_pilot_raw.csv` are sacred.
 If re-extraction is needed, save as a new versioned file and note the reason
 in SESSION_LOG.md.
 

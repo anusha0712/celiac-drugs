@@ -1,0 +1,5 @@
+fda_term,match_type,flag_decision,source_url,iid_status,iid_unii,rationale
+\bPOLYETHYLENE\s+GLYCOL,regex,contains_peg,https://www.uspnf.com/notices/peg-gen-announcement-20230929,in_iid,B697894SGQ,"USP-NF PEG monograph name. Catches all MW grades, unspecified, plural."
+\bPOLYETHYLENE\s+OXIDE,regex,contains_peg,https://www.uspnf.com/notices/peg-gen-announcement-20230929,not_in_iid,,Same polymer as PEG at higher MW. USP-NF PEO monograph.
+\bMACROGOL,regex,contains_peg,https://www.uspnf.com/notices/peg-gen-announcement-20230929,not_in_iid,,EU/USP-EP name for PEG. Synonym per USP-NF cross-reference.
+\bCARBOWAX,regex,contains_peg,https://www.uspnf.com/notices/peg-gen-announcement-20230929,not_in_iid,,Dow trade name for PEG (rare in DailyMed; kept as defensive).
