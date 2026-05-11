@@ -26,3 +26,7 @@ data/fullcatalog/gluten_fullcatalog_flagged.csv
 .vscode/
 .idea/
 *.swp
+
+# Claude
+.claude/
+CLAUDE.md
